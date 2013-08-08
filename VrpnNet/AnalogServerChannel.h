@@ -1,7 +1,5 @@
-// stdafx.h : include file for standard system include files,
-// or project specific include files that are used frequently,
-// but are changed infrequently
-
+// AnalogServerChannel.h: Interface description for Vrpn.AnalogServerChannel
+//
 // Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,8 +22,29 @@
 
 #pragma once
 
-#define CHECK_DISPOSAL_STATUS() \
-	{ \
-		if (m_disposed) \
-			throw gcnew ObjectDisposedException("VRPN Object"); \
-	}
+namespace Vrpn {
+	public ref class AnalogServerChannel
+	{
+	public:
+		AnalogServerChannel();
+
+		property System::Double Value
+		{
+			System::Double get();
+			void set(System::Double value);
+		}
+		
+		property System::Boolean ClipValues;
+
+		property System::Double Minimum;
+		property System::Double ZeroMin;
+		property System::Double ZeroMax;
+		property System::Double Maximum;
+
+	internal:
+		property System::Boolean Dirty;
+
+	private:
+		System::Double m_value;
+	};
+}

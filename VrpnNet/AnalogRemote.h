@@ -1,6 +1,6 @@
 // AnalogRemote.h: Interface description for Vrpn.AnalogRemote
 //
-// Copyright (c) 2008 Chris VanderKnyff
+// Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ namespace Vrpn {
 	{
 	public:
 		property System::DateTime Time;
-		property cli::array<System::Double> ^Channels;
+		property cli::array<double> ^Channels;
 	};
 
 	public delegate void AnalogChangeEventHandler(System::Object ^sender,
@@ -42,6 +42,7 @@ namespace Vrpn {
 		AnalogRemote(System::String ^name);
 		AnalogRemote(System::String ^name, Vrpn::Connection ^connection);
 		~AnalogRemote();
+		!AnalogRemote();
 
 		virtual void Update(); // from IVrpnObject
 		virtual Connection^ GetConnection(); // from IVrpnObject
@@ -55,6 +56,7 @@ namespace Vrpn {
 
 	private:
 		::vrpn_Analog_Remote *m_analog;
+		System::Boolean m_disposed;
 
 		void Initialize(System::String ^name, vrpn_Connection *lpConn);
 		void onAnalogChange(void *userData, const vrpn_ANALOGCB info);

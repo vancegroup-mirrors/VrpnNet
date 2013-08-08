@@ -1,4 +1,4 @@
-// Vector3.cpp: Implementation for Vrpn.Vector3
+// MutexServer.cpp: Implementation for Vrpn.MutexServer
 //
 // Copyright (c) 2008-2009 Chris VanderKnyff
 // 
@@ -21,35 +21,53 @@
 // THE SOFTWARE.
 
 #include "stdafx.h"
-
-#include "BaseTypes.h"
+#include "MutexServer.h"
 
 using namespace System;
-
+using namespace System::Runtime::InteropServices;
 using namespace Vrpn;
 
-Vector3::Vector3(Double x, Double y, Double z)
+MutexServer::MutexServer(System::String ^name, Vrpn::Connection ^connection)
 {
-	X = x;
-	Y = y;
-	Z = z;
+	IntPtr hName = Marshal::StringToHGlobalAnsi(name);
+	const char *cName = static_cast<const char *>(hName.ToPointer());
+
+	m_server = new ::vrpn_Mutex_Server(cName, connection->ToPointer());
+	m_connection = connection;
+	Marshal::FreeHGlobal(hName);
+
+	m_disposed = false;
 }
 
-String^ Vector3::ToString()
+MutexServer::!MutexServer()
 {
-	return String::Format("[{0}, {1}, {2}]", X, Y, Z);
+	delete m_server;
+	m_server = 0;
 }
 
-double Vector3::Magnitude::get()
+MutexServer::~MutexServer()
 {
-	return Math::Sqrt(X * X + Y * Y + Z * Z);
+	this->!MutexServer();
 }
 
-void Vector3::Normalize()
+void MutexServer::Update()
 {
-	double length = Magnitude;
+	CHECK_DISPOSAL_STATUS();
+	m_server->mainloop();
+}
 
-	X /= length;
-	Y /= length;
-	Z /= length;
+Connection ^MutexServer::GetConnection()
+{
+	CHECK_DISPOSAL_STATUS();
+	return m_connection;
+}
+
+void MutexServer::MuteWarnings::set(bool)
+{
+	throw gcnew NotSupportedException("vrpn_Mutex_Server does not expose the shutup property.");
+}
+
+bool MutexServer::MuteWarnings::get()
+{
+	throw gcnew NotSupportedException("vrpn_Mutex_Server does not expose the shutup property.");
 }

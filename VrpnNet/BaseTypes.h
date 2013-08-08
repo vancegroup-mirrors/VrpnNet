@@ -1,6 +1,6 @@
 // BaseTypes.h: Interface description for common VRPN utility types
 //
-// Copyright (c) 2008 Chris VanderKnyff
+// Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@
 #pragma once
 
 #include "vrpn_Connection.h"
+
+#include "Quaternion.h"
 
 namespace Vrpn {
 	/// <summary>
@@ -68,27 +70,20 @@ namespace Vrpn {
 	public value class Vector3
 	{
 	public:
-		Vector3(System::Double x, System::Double y, System::Double z);
+		Vector3(double x, double y, double z);
 
-		property System::Double X;
-		property System::Double Y;
-		property System::Double Z;
-
-		virtual System::String^ ToString() override;
-	};
-
-	[System::Diagnostics::DebuggerDisplay("Quaternion ({X}, {Y}, {Z}, {W})")]
-	public value class Quaternion
-	{
-	public:
-		Quaternion(System::Double x, System::Double y, System::Double z, System::Double w);
-
-		property System::Double X;
-		property System::Double Y;
-		property System::Double Z;
-		property System::Double W;
+		property double X;
+		property double Y;
+		property double Z;
 
 		virtual System::String^ ToString() override;
+
+		property double Magnitude
+		{
+			double get();
+		}
+
+		void Normalize();
 	};
 
 	ref class VrpnUtils

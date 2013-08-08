@@ -1,6 +1,6 @@
 // DialRemote.h: Interface description for Vrpn.DialRemote
 //
-// Copyright (c) 2008 Chris VanderKnyff
+// Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ namespace Vrpn {
 	public:
 		property System::DateTime Time;
 		property System::Int32 DialIndex;
-		property System::Double Change;
+		property double Change;
 	};
 
 	public delegate void DialChangeEventHandler(System::Object ^sender,
@@ -44,6 +44,7 @@ namespace Vrpn {
 		DialRemote(System::String ^name);
 		DialRemote(System::String ^name, Vrpn::Connection ^connection);
 		~DialRemote();
+		!DialRemote();
 
 		virtual void Update(); // from IVrpnObject
 		virtual Connection^ GetConnection(); // from IVrpnObject
@@ -57,6 +58,7 @@ namespace Vrpn {
 
 	private:
 		::vrpn_Dial_Remote *m_dial;
+		System::Boolean m_disposed;
 
 		void Initialize(System::String ^name, vrpn_Connection *lpConn);
 		void onDialChange(void *userData, const vrpn_DIALCB info);

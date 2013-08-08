@@ -1,6 +1,6 @@
 // AnalogOutputRemote.h: Interface description for Vrpn.AnalogOutputRemote
 //
-// Copyright (c) 2008 Chris VanderKnyff
+// Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ namespace Vrpn {
 		AnalogOutputRemote(System::String ^name);
 		AnalogOutputRemote(System::String ^name, Vrpn::Connection ^connection);
 		~AnalogOutputRemote();
+		!AnalogOutputRemote();
 
 		virtual void Update(); // from IVrpnObject
 		virtual Connection^ GetConnection(); // from IVrpnObject
@@ -41,19 +42,20 @@ namespace Vrpn {
 		}
 
 		System::Boolean RequestChannelChange(System::Int64 channel,
-			System::Double value);
+			double value);
 
 		System::Boolean RequestChannelChange(System::Int64 channel,
-			System::Double value, ServiceClass sc);
+			double value, ServiceClass sc);
 
 		System::Boolean RequestChannelChange(
-			cli::array<System::Double> ^channels);
+			cli::array<double> ^channels);
 
 		System::Boolean RequestChannelChange(
-			cli::array<System::Double> ^channels, ServiceClass sc);
+			cli::array<double> ^channels, ServiceClass sc);
 	
 	private:
 		::vrpn_Analog_Output_Remote *m_analogOut;
+		System::Boolean m_disposed;
 		
 		void Initialize(System::String ^name, vrpn_Connection *lpConn);
 	};

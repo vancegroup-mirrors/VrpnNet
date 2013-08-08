@@ -1,7 +1,5 @@
-// stdafx.h : include file for standard system include files,
-// or project specific include files that are used frequently,
-// but are changed infrequently
-
+// MutexServer.h: Interface description for Vrpn.MutexServer
+//
 // Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,8 +22,29 @@
 
 #pragma once
 
-#define CHECK_DISPOSAL_STATUS() \
-	{ \
-		if (m_disposed) \
-			throw gcnew ObjectDisposedException("VRPN Object"); \
-	}
+#include "BaseTypes.h"
+#include "Connection.h"
+#include "vrpn_Mutex.h"
+
+namespace Vrpn {
+	public ref class MutexServer: public Vrpn::IVrpnObject 
+	{
+	public:
+		MutexServer(System::String ^name, Vrpn::Connection ^connection);
+		~MutexServer();
+		!MutexServer();
+
+		virtual void Update(); // from IVrpnObject
+		virtual Connection^ GetConnection(); // from IVrpnObject
+		property System::Boolean MuteWarnings // from IVrpnObject--not implemented
+		{
+			virtual void set(System::Boolean);
+			virtual System::Boolean get();
+		}
+
+	private:
+		::vrpn_Mutex_Server *m_server;
+		Vrpn::Connection ^m_connection;
+		System::Boolean m_disposed;
+	};
+}

@@ -1,7 +1,5 @@
-// stdafx.h : include file for standard system include files,
-// or project specific include files that are used frequently,
-// but are changed infrequently
-
+// Quaternion.h: Interface description for Vrpn.Quaternion
+//
 // Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,10 +20,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#pragma once
+// Portions of the quaternion code are based on Quatlib, a public domain library
+// initially written by Warren Robinett and Richard Holloway.
 
-#define CHECK_DISPOSAL_STATUS() \
-	{ \
-		if (m_disposed) \
-			throw gcnew ObjectDisposedException("VRPN Object"); \
-	}
+namespace Vrpn {
+	value class Vector3;
+
+	[System::Diagnostics::DebuggerDisplay("Quaternion ({X}, {Y}, {Z}, {W})")]
+	public value class Quaternion
+	{
+	public:
+		Quaternion(double x, double y, double z, double w);
+
+		property double X;
+		property double Y;
+		property double Z;
+		property double W;
+
+		virtual System::String^ ToString() override;
+
+		static Quaternion FromAxisAngle(Vector3 axis, double angle);
+		
+		void ToAxisAngle([System::Runtime::InteropServices::Out] Vector3 %axis,
+			[System::Runtime::InteropServices::Out] double %angle);
+
+		void Normalize();
+
+		static Quaternion Exp(Quaternion quat);
+		static Quaternion Log(Quaternion quat);
+		static Quaternion Invert(Quaternion quat);
+		static Quaternion Conjugate(Quaternion quat);
+
+		static const double Tolerance = 1.0e-10;
+	};
+
+}

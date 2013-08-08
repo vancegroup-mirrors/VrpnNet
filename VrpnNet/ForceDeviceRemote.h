@@ -1,6 +1,6 @@
 // ForceDeviceRemote.h: Interface description for Vrpn.ForceDeviceRemote
 //
-// Copyright (c) 2008 Chris VanderKnyff
+// Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -87,6 +87,7 @@ namespace Vrpn {
 		ForceDeviceRemote(System::String ^name);
 		ForceDeviceRemote(System::String ^name, Vrpn::Connection ^connection);
 		~ForceDeviceRemote();
+		!ForceDeviceRemote();
 
 		virtual void Update(); // from IVrpnObject
 		virtual Connection^ GetConnection(); // from IVrpnObject
@@ -171,6 +172,7 @@ namespace Vrpn {
 
 	private:
 		::vrpn_ForceDevice_Remote *m_force;
+		System::Boolean m_disposed;
 
 		void Initialize(System::String ^name, ::vrpn_Connection *lpConn);
 		void onSurfaceContact(void *userData, const ::vrpn_FORCESCPCB info);

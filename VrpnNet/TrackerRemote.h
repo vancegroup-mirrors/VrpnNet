@@ -1,6 +1,6 @@
 // TrackerRemote.h: Interface description for Vrpn.TrackerRemote
 //
-// Copyright (c) 2008 Chris VanderKnyff
+// Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@ namespace Vrpn {
 		property System::Int32 Sensor;
 		property Vrpn::Vector3 Velocity;
 		property Vrpn::Quaternion VelocityQuat;
-		property System::Double VelocityQuatDeltaSeconds;
+		property double VelocityQuatDeltaSeconds;
 	};
 
 	public ref class TrackerAccelChangeEventArgs: public System::EventArgs
@@ -54,7 +54,7 @@ namespace Vrpn {
 		property System::Int32 Sensor;
 		property Vrpn::Vector3 Acceleration;
 		property Vrpn::Quaternion AccelerationQuat;
-		property System::Double AccelerationQuatDeltaSeconds;
+		property double AccelerationQuatDeltaSeconds;
 	};
 
 	public ref class TrackerToRoomEventArgs: public System::EventArgs
@@ -95,6 +95,7 @@ namespace Vrpn {
 		TrackerRemote(System::String ^name);
 		TrackerRemote(System::String ^name, Vrpn::Connection ^connection);
 		~TrackerRemote();
+		!TrackerRemote();
 
 		virtual void Update(); // from IVrpnObject
 		virtual Connection^ GetConnection(); // from IVrpnObject
@@ -108,9 +109,9 @@ namespace Vrpn {
 		void RequestUnitToSensorXform();
 		void RequestWorkspaceBounds();
 
-		property System::Double UpdateRate
+		property double UpdateRate
 		{
-			void set(System::Double samplesPerSecond);
+			void set(double samplesPerSecond);
 		}
 
 		void ResetOrigin();
@@ -124,6 +125,7 @@ namespace Vrpn {
 
 	private:
 		::vrpn_Tracker_Remote *m_tracker;
+		System::Boolean m_disposed;
 
 		void RegisterHandlers();
 

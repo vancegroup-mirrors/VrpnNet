@@ -1,6 +1,6 @@
 // Connection.h: Interface description for Vrpn.Connection
 //
-// Copyright (c) 2008 Chris VanderKnyff
+// Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,8 @@ namespace Vrpn {
 	public ref class Connection
 	{
 	public:
+		literal System::Int32 DefaultListenPort = vrpn_DEFAULT_LISTEN_PORT_NO;
+
 		static Vrpn::Connection^ GetConnectionByName(
 			System::String ^name);
 
@@ -42,10 +44,30 @@ namespace Vrpn {
 			System::String ^nicIpAddress,
 			System::Boolean forceReopen);
 
+		static Vrpn::Connection^ CreateServerConnection();
+
+		static Vrpn::Connection^ CreateServerConnection(
+			System::Int32 port);
+
+		static Vrpn::Connection^ CreateServerConnection(
+			System::Int32 port,
+			System::String ^localInLogfileName,
+			System::String ^localOutLogfileName,
+			System::String ^nicName);
+
+		static Vrpn::Connection^ CreateServerConnection(
+			System::String ^name);
+
+		static Vrpn::Connection^ CreateServerConnection(
+			System::String ^name,
+			System::String ^localInLogfileName,
+			System::String ^localOutLogfileName);
+
 		static Vrpn::Connection^ FromPointer(
 			::vrpn_Connection *pointer);
 		
 		~Connection();
+		!Connection();
 
 		void Update();
 
@@ -65,5 +87,6 @@ namespace Vrpn {
 		Connection(::vrpn_Connection *connection);
 
 		::vrpn_Connection *m_connection;
+		System::Boolean m_disposed;
 	};
 }

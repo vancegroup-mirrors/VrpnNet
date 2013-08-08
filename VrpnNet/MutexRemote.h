@@ -1,4 +1,4 @@
-// PoserRemote.h: Interface description for Vrpn.PoserRemote
+// MutexRemote.h: Interface description for Vrpn.MutexRemote
 //
 // Copyright (c) 2008-2009 Chris VanderKnyff
 // 
@@ -22,49 +22,58 @@
 
 #pragma once
 
-#include "vrpn_Poser.h"
 #include "BaseTypes.h"
 #include "Connection.h"
+#include "MutexRemoteNative.h"
 
 namespace Vrpn {
-	public ref class PoserRemote: public IVrpnObject
+	public ref class MutexRemote: public Vrpn::IVrpnObject 
 	{
 	public:
-		PoserRemote(System::String ^name);
-		PoserRemote(System::String ^name, Vrpn::Connection ^connection);
-		~PoserRemote();
-		!PoserRemote();
+		MutexRemote(System::String ^name);
+		MutexRemote(System::String ^name, Vrpn::Connection ^connection);
+		~MutexRemote();
+		!MutexRemote();
 
-		virtual void Update();
-		virtual Vrpn::Connection^ GetConnection();
-		property System::Boolean MuteWarnings
+		virtual void Update(); // from IVrpnObject
+		virtual Connection^ GetConnection(); // from IVrpnObject
+		property System::Boolean MuteWarnings // from IVrpnObject
 		{
 			virtual void set(System::Boolean);
 			virtual System::Boolean get();
 		}
 
-		void RequestPose(System::DateTime time,
-			Vrpn::Vector3 position,
-			Vrpn::Quaternion quaternion);
+		property System::Boolean Available
+		{
+			System::Boolean get();
+		}
 
-		void RequestPoseRelative(System::DateTime time,
-			Vrpn::Vector3 positionDelta,
-			Vrpn::Quaternion quaternion);
+		property System::Boolean HeldLocally
+		{
+			System::Boolean get();
+		}
 
-		void RequestPoseVelocity(System::DateTime time,
-			Vrpn::Vector3 velocity,
-			Vrpn::Quaternion quaternion,
-			double interval);
+		property System::Boolean HeldRemotely
+		{
+			System::Boolean get();
+		}
 
-		void RequestPoseVelocityRelative(System::DateTime time,
-			Vrpn::Vector3 velocityDelta,
-			Vrpn::Quaternion quaternion,
-			double intervalDelta);
+		void Request();
+		void Release();
+
+		event System::EventHandler ^RequestGranted;
+		event System::EventHandler ^RequestDenied;
+		event System::EventHandler ^Taken;
+		event System::EventHandler ^Released;
 
 	private:
-		::vrpn_Poser_Remote *m_poser;
+		Vrpn::Internal::MutexRemoteNative *m_mutex;
 		System::Boolean m_disposed;
 
-		void Initialize(System::String ^name, vrpn_Connection *lpConn);
+		void Initialize(System::String ^name, ::vrpn_Connection *lpConn);
+
+		void onVrpnEvent(int event);
+
+		System::Runtime::InteropServices::GCHandle gc_vrpnCallback;
 	};
 }

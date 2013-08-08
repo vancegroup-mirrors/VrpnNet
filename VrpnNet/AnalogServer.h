@@ -1,4 +1,4 @@
-// PoserRemote.h: Interface description for Vrpn.PoserRemote
+// AnalogServer.h: Interface description for Vrpn.AnalogServer
 //
 // Copyright (c) 2008-2009 Chris VanderKnyff
 // 
@@ -22,49 +22,43 @@
 
 #pragma once
 
-#include "vrpn_Poser.h"
+#include "vrpn_Analog.h"
+
+#include "AnalogServerChannel.h"
 #include "BaseTypes.h"
 #include "Connection.h"
 
 namespace Vrpn {
-	public ref class PoserRemote: public IVrpnObject
+	public ref class AnalogServer: public Vrpn::IVrpnObject
 	{
 	public:
-		PoserRemote(System::String ^name);
-		PoserRemote(System::String ^name, Vrpn::Connection ^connection);
-		~PoserRemote();
-		!PoserRemote();
+		AnalogServer(System::String ^name, Vrpn::Connection ^connection);
+		AnalogServer(System::String ^name, Vrpn::Connection ^connection, System::Int32 numChannels);
+		~AnalogServer();
+		!AnalogServer();
 
-		virtual void Update();
-		virtual Vrpn::Connection^ GetConnection();
-		property System::Boolean MuteWarnings
+		virtual void Update(); // from IVrpnObject
+		virtual Connection^ GetConnection(); // from IVrpnObject
+		property System::Boolean MuteWarnings // from IVrpnObject
 		{
 			virtual void set(System::Boolean);
 			virtual System::Boolean get();
 		}
 
-		void RequestPose(System::DateTime time,
-			Vrpn::Vector3 position,
-			Vrpn::Quaternion quaternion);
+		void Report();
+		void Report(ServiceClass classOfService, System::DateTime time);
 
-		void RequestPoseRelative(System::DateTime time,
-			Vrpn::Vector3 positionDelta,
-			Vrpn::Quaternion quaternion);
+		void ReportChanges();
+		void ReportChanges(ServiceClass classOfService, System::DateTime time);
 
-		void RequestPoseVelocity(System::DateTime time,
-			Vrpn::Vector3 velocity,
-			Vrpn::Quaternion quaternion,
-			double interval);
-
-		void RequestPoseVelocityRelative(System::DateTime time,
-			Vrpn::Vector3 velocityDelta,
-			Vrpn::Quaternion quaternion,
-			double intervalDelta);
+		literal System::Int32 MaxChannels = vrpn_CHANNEL_MAX;	
 
 	private:
-		::vrpn_Poser_Remote *m_poser;
-		System::Boolean m_disposed;
+		void Initialize(System::String ^name, Vrpn::Connection ^connection, System::Int32 numChannels);
+		void UpdateChannels();
 
-		void Initialize(System::String ^name, vrpn_Connection *lpConn);
+		::vrpn_Analog_Server *m_server;
+		cli::array<AnalogServerChannel ^> ^m_channels;
+		System::Boolean m_disposed;
 	};
 }

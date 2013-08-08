@@ -1,7 +1,9 @@
-// stdafx.h : include file for standard system include files,
-// or project specific include files that are used frequently,
-// but are changed infrequently
-
+// MutexRemoteNative.h: Interface description for MutexRemoteNative
+//
+// This class exists to work around some interface deficiencies in vrpn_Mutex_Remote:
+//  1. Its event handlers are declared __cdecl, making them off-limits to .NET.
+//  2. It provides no way of accessing its vrpn_Connection object after creation.
+//
 // Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,8 +26,37 @@
 
 #pragma once
 
-#define CHECK_DISPOSAL_STATUS() \
-	{ \
-		if (m_disposed) \
-			throw gcnew ObjectDisposedException("VRPN Object"); \
+#include "vrpn_Mutex.h"
+
+namespace Vrpn {
+	namespace Internal {
+		enum MutexRemoteEvent {
+			RequestGranted,
+			RequestDenied,
+			Taken,
+			Released,
+		};
+
+		typedef void (__stdcall *MutexDelegate)(int);
+
+		class MutexRemoteNative: public ::vrpn_Mutex_Remote {
+		public:
+			MutexRemoteNative(const char *name, ::vrpn_Connection *lpConn);
+			virtual ~MutexRemoteNative();
+
+			::vrpn_Connection *connectionPtr() const;
+
+			void setCallback(MutexDelegate callback);
+
+		protected:
+			MutexDelegate m_callback;
+
+			void signalEvent(MutexRemoteEvent reason);
+
+			static int vrpnRequestGranted(void *me);
+			static int vrpnRequestDenied(void *me);
+			static int vrpnTaken(void *me);
+			static int vrpnReleased(void *me);
+		};
 	}
+}

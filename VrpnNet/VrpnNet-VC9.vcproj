@@ -202,11 +202,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AnalogServer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AnalogServerChannel.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\AssemblyInfo.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\ButtonRemote.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ButtonServer.cpp"
 				>
 			</File>
 			<File
@@ -219,6 +231,18 @@
 			</File>
 			<File
 				RelativePath=".\ForceDeviceRemote.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MutexRemote.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MutexRemoteNative.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MutexServer.cpp"
 				>
 			</File>
 			<File
@@ -262,6 +286,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TrackerServer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Vector3.cpp"
 				>
 			</File>
@@ -284,11 +312,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AnalogServer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AnalogServerChannel.h"
+				>
+			</File>
+			<File
 				RelativePath=".\BaseTypes.h"
 				>
 			</File>
 			<File
 				RelativePath=".\ButtonRemote.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ButtonServer.h"
 				>
 			</File>
 			<File
@@ -304,7 +344,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MutexRemote.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MutexRemoteNative.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MutexServer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PoserRemote.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Quaternion.h"
 				>
 			</File>
 			<File
@@ -317,6 +373,10 @@
 			</File>
 			<File
 				RelativePath=".\TrackerRemote.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TrackerServer.h"
 				>
 			</File>
 		</Filter>

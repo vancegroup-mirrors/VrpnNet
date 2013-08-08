@@ -1,6 +1,6 @@
 // Text.h: Interface descriptions for Vrpn.TextSender and Vrpn.TextReceiver
 //
-// Copyright (c) 2008 Chris VanderKnyff
+// Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -53,6 +53,7 @@ namespace Vrpn {
 		TextSender(System::String ^name);
 		TextSender(System::String ^name, Vrpn::Connection ^connection);
 		~TextSender();
+		!TextSender();
 
 		virtual void Update(); // from IVrpnObject
 		virtual Connection^ GetConnection(); // from IVrpnObject
@@ -78,6 +79,7 @@ namespace Vrpn {
 
 	private:
 		::vrpn_Text_Sender *m_sender;
+		System::Boolean m_disposed;
 
 		void Initialize(System::String ^name, vrpn_Connection *lpConn);
 	};
@@ -88,6 +90,7 @@ namespace Vrpn {
 		TextReceiver(System::String ^name);
 		TextReceiver(System::String ^name, Vrpn::Connection ^connection);
 		~TextReceiver();
+		!TextReceiver();
 
 		virtual void Update(); // from IVrpnObject
 		virtual Connection^ GetConnection(); // from IVrpnObject
@@ -101,6 +104,7 @@ namespace Vrpn {
 
 	private:
 		::vrpn_Text_Receiver *m_receiver;
+		System::Boolean m_disposed;
 		System::Runtime::InteropServices::GCHandle gc_callback;
 
 		void onTextReceived(void *userData, const vrpn_TEXTCB info);

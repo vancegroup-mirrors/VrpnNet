@@ -1,4 +1,4 @@
-// PoserRemote.h: Interface description for Vrpn.PoserRemote
+// ButtonServer.h: Interface description for Vrpn.ButtonServer
 //
 // Copyright (c) 2008-2009 Chris VanderKnyff
 // 
@@ -22,49 +22,56 @@
 
 #pragma once
 
-#include "vrpn_Poser.h"
 #include "BaseTypes.h"
 #include "Connection.h"
+#include "vrpn_Button.h"
 
 namespace Vrpn {
-	public ref class PoserRemote: public IVrpnObject
+	public ref class ButtonServer: public Vrpn::IVrpnObject
 	{
 	public:
-		PoserRemote(System::String ^name);
-		PoserRemote(System::String ^name, Vrpn::Connection ^connection);
-		~PoserRemote();
-		!PoserRemote();
+		ButtonServer(System::String ^name, Vrpn::Connection ^connection);
+		ButtonServer(System::String ^name, Vrpn::Connection ^connection, System::Int32 numButtons);
+		~ButtonServer();
+		!ButtonServer();
 
-		virtual void Update();
-		virtual Vrpn::Connection^ GetConnection();
-		property System::Boolean MuteWarnings
+		virtual void Update(); // from IVrpnObject
+		virtual Vrpn::Connection ^GetConnection(); // from IVrpnObject
+		property System::Boolean MuteWarnings // from IVrpnObject
 		{
-			virtual void set(System::Boolean);
+			virtual void set(System::Boolean shutUp);
 			virtual System::Boolean get();
 		}
 
-		void RequestPose(System::DateTime time,
-			Vrpn::Vector3 position,
-			Vrpn::Quaternion quaternion);
+		ref class ButtonCollection
+		{
+		internal:
+			ButtonCollection(ButtonServer ^parent, System::Int32 numButtons);
+		
+		public:
+			property System::Boolean default [System::Int32]
+			{
+				System::Boolean get(System::Int32 index);
+				void set(System::Int32 index, System::Boolean value);
+			}
 
-		void RequestPoseRelative(System::DateTime time,
-			Vrpn::Vector3 positionDelta,
-			Vrpn::Quaternion quaternion);
+		private:
+			cli::array<System::Boolean> ^m_array;
+			ButtonServer ^m_parent;
+		};
 
-		void RequestPoseVelocity(System::DateTime time,
-			Vrpn::Vector3 velocity,
-			Vrpn::Quaternion quaternion,
-			double interval);
+		property ButtonCollection ^Buttons
+		{
+			ButtonCollection ^get();
+		};
 
-		void RequestPoseVelocityRelative(System::DateTime time,
-			Vrpn::Vector3 velocityDelta,
-			Vrpn::Quaternion quaternion,
-			double intervalDelta);
+		literal int MaxButtons = vrpn_BUTTON_MAX_BUTTONS;
 
 	private:
-		::vrpn_Poser_Remote *m_poser;
+		::vrpn_Button_Server *m_server;
+		ButtonCollection ^m_buttons;
 		System::Boolean m_disposed;
 
-		void Initialize(System::String ^name, vrpn_Connection *lpConn);
+		void Initialize(System::String ^name, Vrpn::Connection ^connection, System::Int32 numButtons);
 	};
 }

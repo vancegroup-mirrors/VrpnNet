@@ -1,6 +1,6 @@
 // ButtonRemote.h: Interface description for Vrpn.ButtonRemote
 //
-// Copyright (c) 2008 Chris VanderKnyff
+// Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +45,7 @@ namespace Vrpn {
 		ButtonRemote(System::String ^name);
 		ButtonRemote(System::String ^name, Vrpn::Connection ^connection);
 		~ButtonRemote();
+		!ButtonRemote();
 
 		virtual void Update(); // from IVrpnObject
 		virtual Connection^ GetConnection(); // from IVrpnObject
@@ -63,5 +64,6 @@ namespace Vrpn {
 		void onButtonChange(void *userData, const vrpn_BUTTONCB info);
 
 		System::Runtime::InteropServices::GCHandle gc_callback;
+		System::Boolean m_disposed;
 	};
 }

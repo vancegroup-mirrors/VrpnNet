@@ -1,6 +1,6 @@
 // ButtonRemote.cpp: Implementation for Vrpn.ButtonRemote
 //
-// Copyright (c) 2008 Chris VanderKnyff
+// Copyright (c) 2008-2009 Chris VanderKnyff
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,16 @@
 #include "stdafx.h"
 #include "ButtonRemote.h"
 
+namespace Vrpn {
+	namespace Internal {
+		delegate void ButtonChangeCallback(void *userData, const vrpn_BUTTONCB info);
+	}
+}
+
 using namespace System;
 using namespace System::Runtime::InteropServices;
 using namespace Vrpn;
-
-namespace {
-	delegate void ButtonChangeCallback(void *userData, const vrpn_BUTTONCB info);
-}
+using namespace Vrpn::Internal;
 
 ButtonRemote::ButtonRemote(String ^name)
 {
@@ -41,6 +44,8 @@ ButtonRemote::ButtonRemote(String ^name)
 	Marshal::FreeHGlobal(hAnsiName);
 
 	RegisterHandler();
+
+	m_disposed = false;
 }
 
 ButtonRemote::ButtonRemote(System::String ^name, Vrpn::Connection ^connection)
@@ -53,32 +58,44 @@ ButtonRemote::ButtonRemote(System::String ^name, Vrpn::Connection ^connection)
 	Marshal::FreeHGlobal(hAnsiName);
 
 	RegisterHandler();
+
+	m_disposed = false;
 }
 
-ButtonRemote::~ButtonRemote()
+ButtonRemote::!ButtonRemote()
 {
 	delete m_button;
 
 	gc_callback.Free();
+	m_disposed = true;
+}
+
+ButtonRemote::~ButtonRemote()
+{
+	this->!ButtonRemote();
 }
 
 void ButtonRemote::Update()
 {
+	CHECK_DISPOSAL_STATUS();
 	m_button->mainloop();
 }
 
 void ButtonRemote::MuteWarnings::set(Boolean shutUp)
 {
+	CHECK_DISPOSAL_STATUS();
 	m_button->shutup = shutUp;
 }
 
 Boolean ButtonRemote::MuteWarnings::get()
 {
+	CHECK_DISPOSAL_STATUS();
 	return m_button->shutup;
 }
 
 Connection^ ButtonRemote::GetConnection()
 {
+	CHECK_DISPOSAL_STATUS();
 	return Connection::FromPointer(m_button->connectionPtr());
 }
 
